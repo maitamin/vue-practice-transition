@@ -2,9 +2,11 @@
   <div class="main">
     <button @click="myAnimation = 'slide'">Slide</button>
     <button @click="myAnimation = 'fade'">Fade</button>
+    <br>
     {{ myAnimation }}
+    <br>
     <button @click="show = !show">切り替え</button>
-    <transition name="fade">
+    <transition name="fade" mode="out-in">
       <p v-if="show" key="bye">さようなら</p>
       <p v-if="!show" key="hello">こんにちは</p>
     </transition>
