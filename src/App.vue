@@ -6,6 +6,13 @@
     {{ myAnimation }}
     <br>
     <button @click="show = !show">切り替え</button>
+    <br>
+    <button @click="myComponent = 'ComponentA'">ComponentA</button>
+    <button @click="myComponent = 'ComponentB'">ComponentB</button>
+    <transition name="fade" mode="out-in">
+      <component :is="myComponent"></component>
+    </transition>
+
     <transition name="fade" mode="out-in">
       <p v-if="show" key="bye">さようなら</p>
       <p v-if="!show" key="hello">こんにちは</p>
@@ -28,11 +35,19 @@
 </template>
 
 <script>
+import ComponentA from "./components/ComponentA";
+import ComponentB from "./components/ComponentB";
+
 export default {
+  components: {
+    ComponentA,
+    ComponentB,
+  },
   data() {
     return {
       show: true,
       myAnimation: "slide",
+      myComponent: "ComponentA",
     }
   }
 }
@@ -45,7 +60,7 @@ export default {
 }
 .fade-enter-active {
   /* 現れる時のトランジションの状態 */
-  transition: opacity 2s;
+  transition: opacity 0.5s;
 }
 .fade-enter-to {
   /* 現れる時の最後の状態 */
@@ -57,7 +72,7 @@ export default {
 } 
 .fade-leave-active {
   /* 消える時のトランジションの状態 */
-  transition: opacity 2s;
+  transition: opacity 0.5s;
 }
 .fade-leave-to {
   /* 消える時の最後の状態 */
