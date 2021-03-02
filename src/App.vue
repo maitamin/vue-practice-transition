@@ -7,6 +7,23 @@
     <br>
     <button @click="show = !show">切り替え</button>
     <br>
+    <br>
+    <transition
+      :css="false"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @enter-cancelled="enterCancelled"
+
+      @before-leave="beforeLeave"
+      @leave="leave"
+      @after-leave="afterLeave"
+      @leave-cancelled="leaveCancelled"
+
+    >
+      <div class="circle" v-if="show"></div>
+    </transition>
+    <br>
     <button @click="myComponent = 'ComponentA'">ComponentA</button>
     <button @click="myComponent = 'ComponentB'">ComponentB</button>
     <transition name="fade" mode="out-in">
@@ -48,12 +65,76 @@ export default {
       show: true,
       myAnimation: "slide",
       myComponent: "ComponentA",
-    }
+    };
+  },
+  methods: {
+    beforeEnter(el) {
+      // 現れる前
+      console.log('beforeEnter');
+
+      el.style.transform = 'scale(0)';
+    },
+    enter(el, done) {
+      // 現れる時
+      console.log('enter');
+
+      let scale = 0;
+      const interval = setInterval(() => {
+        el.style.transform = `scale(${scale})`;
+        scale += 0.1;
+        if (scale > 1) {
+          clearInterval(interval);
+          done();
+        }
+      }, 20);
+    },
+    afterEnter(el) {
+      // 現れた後
+      console.log('afterEnter');
+    },
+    enterCancelled(el) {
+      // 現れるアニメーションがキャンセルされた時
+      console.log('enterCancelled');
+    },
+    beforeLeave(el) {
+      // 消える前
+      console.log('beforeLeave');
+    },
+    leave(el, done) {
+      // 消える時
+      console.log('leave');
+
+      let scale = 1;
+      const interval = setInterval(() => {
+        el.style.transform = `scale(${scale})`;
+        scale -= 0.1;
+        if (scale < 0) {
+          clearInterval(interval);
+          done();
+        }
+      }, 20);
+    },
+    afterLeave(el) {
+      // 消えた後
+      console.log('afterLeave');
+    },
+    leaveCancelled(el) {
+      // 消えるアニメーションがキャンセルされた時
+      // v-showの時だけ有効
+      console.log('leaveCancelled');
+    },
   }
 }
 </script>
 
 <style scoped>
+.circle {
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  border-radius: 100px;
+  background-color: deeppink;
+}
 .fade-enter {
   /* 現れる時の最初の状態 */
   opacity: 0;
